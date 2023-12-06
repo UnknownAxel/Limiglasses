@@ -1,0 +1,27 @@
+#include <SoftwareSerial.h>
+
+// Pines para el sensor ultrasonido
+int TRIG = 10;
+int ECO = 9;
+// Pines para el LED y el buzzer
+int LED = 3;
+const int pBuzzer = 12;
+// Variables para la distancia
+int distancia;
+int duracion;
+// Umbral de distancia para activar el buzzer y el LED (en centímetros)
+int umbralDistancia = 1000; // Puedes cambiar este valor según tus necesidades
+
+// Configurar SoftwareSerial
+SoftwareSerial btSerial(2, 3); // RX, TX
+
+void setup() {
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECO, INPUT);
+  pinMode(LED, OUTPUT);
+  pinMode(pBuzzer, OUTPUT);
+
+  // Iniciar comunicación Serial y Bluetooth
+  Serial.begin(9600);
+  btSerial.begin(9600); // Asegúrate de que el baud rate coincida con el del módulo HC-05
+}

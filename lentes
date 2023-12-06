@@ -25,3 +25,33 @@ void setup() {
   Serial.begin(9600);
   btSerial.begin(9600); // Asegúrate de que el baud rate coincida con el del módulo HC-05
 }
+void loop() {
+  // Comprobar si hay datos disponibles desde Bluetooth
+  if (btSerial.available()) {
+    umbralDistancia = btSerial.parseInt(); // Leer la nueva distancia de calibración
+    btSerial.flush(); // Limpiar el buffer de Serial para evitar lecturas falsas
+  }
+
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+  
+  duracion = pulseIn(ECO, HIGH);
+  distancia = duracion / 58.2;
+  
+  // Imprime la distancia en el Serial Monitor y envíala también por Bluetooth
+  Serial.println(distancia);
+  btSerial.println(distancia);
+  delay(200);
+
+  // Usa el umbral de distancia para determinar si activar el LED y el buzzer
+  if (distancia <= umbralDistancia && distancia >= 0) {
+    digitalWrite(LED, HIGH);
+    digitalWrite(pBuzzer, HIGH);
+    delay(100);
+    digitalWrite(LED, LOW);
+    digitalWrite(pBuzzer, LOW);
+  }
+}
